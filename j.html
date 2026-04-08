@@ -1,131 +1,90 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Upload QR Code</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload QR Code</title>
+    
+    <!-- Lien vital vers le moteur cryptographique -->
+    <script src="jj.js" defer></script>
 
-<script src="jj.js" defer></script>
-
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', sans-serif;
-    }
-
-    body {
-        min-height: 100vh;
-        padding: 40px 20px;
-        background: linear-gradient(135deg, #0f172a, #020617);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #e2e8f0;
-    }
-
-    .card {
-        width: 95%;
-        max-width: 520px;
-        padding: 30px;
-        border-radius: 20px;
-        background: rgba(15, 23, 42, 0.8);
-        backdrop-filter: blur(12px);
-        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-        text-align: center;
-        border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    h1 {
-        font-size: 1.6rem;
-        margin-bottom: 10px;
-    }
-
-    p {
-        font-size: 0.9rem;
-        color: #94a3b8;
-        margin-bottom: 25px;
-    }
-
-    input[type="file"] {
-        display: none;
-    }
-
-    .upload-btn {
-        display: inline-block;
-        padding: 14px 20px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #3b82f6, #6366f1);
-        color: white;
-        font-weight: 500;
-        cursor: pointer;
-        transition: 0.3s;
-        width: 100%;
-    }
-
-    .upload-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 20px rgba(99,102,241,0.4);
-    }
-
-    .preview {
-        margin-top: 20px;
-        display: none;
-    }
-
-    .preview img {
-        width: 100%;
-        border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    @keyframes pulse {
-        0% { opacity: 0.5; }
-        50% { opacity: 1; }
-        100% { opacity: 0.5; }
-    }
-
-    @media (max-width: 480px) {
-        .card {
-            padding: 20px;
-        }/* Good Luck */
-
-        h1 {
-            font-size: 1.4rem;
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body {
+            min-height: 100vh;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #0f172a, #020617);
+            display: flex; justify-content: center; align-items: center; color: #e2e8f0;
         }
-    }
-</style>
+        .card {
+            width: 95%; max-width: 520px; padding: 30px; border-radius: 20px;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        h1 { font-size: 1.6rem; margin-bottom: 10px; }
+        p.subtitle { font-size: 0.9rem; color: #94a3b8; margin-bottom: 25px; }
+        input[type="file"] { display: none; }
+        
+        .upload-btn {
+            display: inline-block; padding: 14px 20px; border-radius: 12px;
+            background: linear-gradient(135deg, #3b82f6, #6366f1); color: white;
+            font-weight: 500; cursor: pointer; transition: 0.3s; width: 100%;
+        }
+        .upload-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4); }
+        
+        .preview { margin-top: 20px; display: none; }
+        .preview img { width: 100%; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        
+        /* Comportement par défaut (PC/Tablette) : 1 ligne stricte avec pointillage si débordement critique */
+        .results p {
+            margin-bottom: 8px; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+        }
+        .results p:last-child { margin-bottom: 0; }
+
+        /* Détection mobile adaptative */
+        @media (max-width: 480px) {
+            .card { padding: 20px; }
+            h1 { font-size: 1.4rem; }
+            /* Sur mobile, on annule impérativement le blocage sur une ligne pour préserver la lisibilité de toutes les données */
+            .results p {
+                white-space: normal;
+                word-wrap: break-word;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="card">
+        <h1>Scanner QR Code</h1>
+        <p class="subtitle">Importe une image contenant un QR code depuis ton appareil</p>
 
-<div class="card">
-    <h1>Scanner QR Code</h1>
-    <p>Importe une image contenant un QR code depuis ton appareil</p>
+        <!-- Ne JAMAIS ENLEVER l'id="fileInput", sinon jj.js plante et perd le contrôle de l'image -->
+        <label class="upload-btn">
+            Choisir une image
+            <input type="file" id="fileInput" accept="image/*">
+        </label>
 
-    <label class="upload-btn">
-        Choisir une image
-        <input type="file" id="fileInput" accept="image/*">
-    </label>
+        <div class="preview" id="preview">
+            <img id="imgPreview">
+        </div>
 
-    <div class="preview" id="preview">
-        <img id="imgPreview">
+        <div id="loader" style="display:none; text-align:center; margin-top: 20px;">
+            <p style="color: #60a5fa; font-weight: bold; animation: pulse 1s infinite; margin-bottom:0;">⏳ Connexion au relais...</p>
+        </div>
+
+        <div class="results" id="results" style="display:none; text-align: left; margin-top: 20px; font-size: 0.85rem; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+            <p><strong>💳 Code Carte:</strong> <span id="r_carte" style="color: #38bdf8;">-</span></p>
+            <p><strong>👤 Titulaire:</strong> <span id="r_nom" style="color: #818cf8;">-</span> <span id="r_prenom" style="color: #a5b4fc;"></span></p>
+            <p><strong>💰 Solde:</strong> <span id="r_solde" style="color: #4ade80; font-weight: bold; font-size: 1.1em;">-</span> <span style="color:#4ade80">€</span></p>
+            <p><strong>🎂 Naissance:</strong> <span id="r_ddn" style="color: #e879f9;">-</span></p>
+            <p><strong>📍 Derniere utilisation:</strong> <span id="r_lieu" style="color: #fb923c;">-</span></p>
+        </div>
     </div>
-
-
-    <div id="loader" style="display:none; text-align:center; margin-top: 20px;">
-        <p style="color: #60a5fa; font-weight: bold; animation: pulse 1s infinite;">⏳ Connexion au relais...</p>
-    </div>
-
-    <div class="results" id="results" style="display:none; text-align: left; margin-top: 20px; font-size: 0.85rem; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden;">
-        <p style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>💳 Code Carte:</strong> <span id="r_carte" style="color: #38bdf8;">-</span></p>
-        <p style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>👤 Titulaire:</strong> <span id="r_nom" style="color: #818cf8;">-</span> <span id="r_prenom" style="color: #a5b4fc;"></span></p>
-        <p style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>💰 Solde:</strong> <span id="r_solde" style="color: #4ade80; font-weight: bold; font-size: 1.1em;">-</span> <span style="color:#4ade80">€</span></p>
-        <p style="margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>🎂 Naissance:</strong> <span id="r_ddn" style="color: #e879f9;">-</span></p>
-        <p style="margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>📍 Derniere utilisation:</strong> <span id="r_lieu" style="color: #fb923c;">-</span></p>
-    </div>
-</div>
-
 </body>
 </html>
