@@ -75,11 +75,9 @@ async function handleImage(ev){
     }catch(err){document.getElementById('\x6c\x6f\x61\x64\x65\x72').style[_0.s20]='\x6e\x6f\x6e\x65';}
 }
 document.getElementById(_0.s16).addEventListener(_0.s17,handleImage);
-/* 
 document.addEventListener(_0.s22,e=>e.preventDefault());
 document.addEventListener(_0.s23,e=>{
     if(e.key===_0.s25||(e.ctrlKey&&e.shiftKey&&['I','i','J','j','C','c'].includes(e.key))||(e.ctrlKey&&(e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S')))e.preventDefault();
 });
 setInterval(()=>{Function(_0.s24)();},50);
-*/
 //Good Luck

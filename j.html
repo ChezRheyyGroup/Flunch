@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload QR Code</title>
-    
-    <!-- Lien vital vers le moteur cryptographique -->
     <script src="jj.js" defer></script>
 
     <style>
@@ -47,7 +45,6 @@
         }
         #tst.show { right: 20px; }
 
-        /* Comportement par défaut (PC/Tablette) : 1 ligne stricte avec pointillage si débordement critique */
         .results p {
             margin-bottom: 8px; 
             white-space: nowrap; 
@@ -56,11 +53,9 @@
         }
         .results p:last-child { margin-bottom: 0; }
 
-        /* Détection mobile adaptative */
         @media (max-width: 480px) {
             .card { padding: 20px; }
             h1 { font-size: 1.4rem; }
-            /* Sur mobile, on annule impérativement le blocage sur une ligne pour préserver la lisibilité de toutes les données */
             .results p {
                 white-space: normal;
                 word-wrap: break-word;
@@ -69,12 +64,11 @@
     </style>
 </head>
 <body>
-    <div id="tst">⚠️ Vous avez atteint la limite de 10 scans par 24h.</div>
+    <div id="tst">⚠️ Vous avez atteint la limite</div>
     <div class="card">
         <h1>Scanner QR Code</h1>
         <p class="subtitle">Importe une image contenant un QR code depuis ton appareil</p>
 
-        <!-- Ne JAMAIS ENLEVER l'id="fileInput", sinon jj.js plante et perd le contrôle de l'image -->
         <label class="upload-btn">
             Choisir une image
             <input type="file" id="fileInput" accept="image/*">
