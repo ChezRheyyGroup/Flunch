@@ -38,6 +38,15 @@
         
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
         
+        #tst {
+            position: fixed; top: 20px; right: -350px;
+            background: rgba(239, 68, 68, 0.95); color: white; padding: 15px 20px;
+            border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); z-index: 1000;
+            font-size: 0.9rem; font-weight: bold; max-width: 300px;
+        }
+        #tst.show { right: 20px; }
+
         /* Comportement par défaut (PC/Tablette) : 1 ligne stricte avec pointillage si débordement critique */
         .results p {
             margin-bottom: 8px; 
@@ -60,6 +69,7 @@
     </style>
 </head>
 <body>
+    <div id="tst">⚠️ Vous avez atteint la limite de 10 scans par 24h.</div>
     <div class="card">
         <h1>Scanner QR Code</h1>
         <p class="subtitle">Importe une image contenant un QR code depuis ton appareil</p>

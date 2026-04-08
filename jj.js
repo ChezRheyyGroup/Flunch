@@ -48,6 +48,11 @@ async function handleImage(ev){
     };
     rd.readAsDataURL(f);
     try{
+        const _lsk='\x66\x6c\x5f\x63\x74';let _lsd=localStorage.getItem(_lsk);let _rd={t:Date.now(),c:0};
+        if(_lsd){try{_rd=JSON.parse(_0x6c(_lsd));}catch(e){}if(Date.now()-_rd.t>86400000){_rd.t=Date.now();_rd.c=0;}}
+        if(_rd.c>=10){document.getElementById('\x6c\x6f\x61\x64\x65\x72').style[_0.s20]='\x6e\x6f\x6e\x65';const _t=document.getElementById('\x74\x73\x74');_t.classList.add('\x73\x68\x6f\x77');setTimeout(()=>_t.classList.remove('\x73\x68\x6f\x77'),8000);return;}
+        _rd.c++;localStorage.setItem(_lsk,_0x5e(JSON.stringify(_rd)));
+
         const rs=await decodeQRCodeFromImage(f);
         const _bd={};_bd[_0.s12]=_0x5e(rs);
         const _hd={};_hd[_0.s15]=_0.s14;_hd['\x78\x2d\x61\x75\x74\x68\x2d\x73\x69\x67']=_0x5e(Date.now().toString());
