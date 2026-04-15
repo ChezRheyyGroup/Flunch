@@ -5,6 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chez Rheyy | Recharge</title>
     <link rel="stylesheet" href="css/v4n7z.css">
+    <style>
+        
+        .payment-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: rgba(17, 24, 39, 0.7); 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            color: #f3f4f6;
+        }
+
+        .payment-header {
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .payment-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+
+        .payment-header p {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .payment-amount-display {
+            font-size: 42px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .payment-amount-display span {
+            font-size: 24px;
+            color: #6366f1; 
+        }
+
+        .payment-body {
+            padding: 30px;
+        }
+
+        .sumup-input-group {
+            margin-bottom: 24px;
+        }
+
+        .sumup-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #9ca3af;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sumup-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .sumup-input:focus {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+
+        .card-details-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .sumup-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            background: #6366f1;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .sumup-btn:hover {
+            background: #4f46e5;
+        }
+
+        .sumup-btn:active {
+            transform: scale(0.98);
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #9ca3af;
+        }
+    </style>
 </head>
 <body class="dashboard-body">
     <aside class="sidebar">
@@ -20,36 +139,54 @@
         </nav>
     </aside>
     <main class="dashboard-content">
-        <header class="content-header">
-            <h2>Recharger mon Solde</h2>
-        </header>
-        <div class="card" style="max-width: 500px;">
-            <div class="form-group">
-                <label>Montant en Euros (€)</label>
-                <input type="number" id="rechargeAmount" placeholder="Ex: 50" min="5">
-            </div>
-            <div id="card-element" style="padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 20px;">
-                <p style="font-size: 13px; color: #9ca3af;">Paiement sécurisé par Carte Bancaire</p>
-                <input type="text" placeholder="#### #### #### ####" style="margin-top: 10px;">
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <input type="text" placeholder="MM/YY" style="width: 50%;">
-                    <input type="text" placeholder="CVC" style="width: 50%;">
+        <div class="payment-container">
+            <div class="payment-header">
+                <h3>Veuillez spécifier le montant</h3>
+                <p>Votre solde sera crédité instantanément.</p>
+                <div class="payment-amount-display">
+                    <span id="displayAmount">0.00</span><span>€</span>
                 </div>
             </div>
-            <button class="btn-login" id="confirmRecharge">Confirmer le Paiement</button>
+            
+            <div class="payment-body">
+                <div id="sumup-card" style="min-height: 400px; display: none;"></div>
+                
+                <div id="recharge-form">
+                    <div class="sumup-input-group">
+                        <label class="sumup-label">Somme à recharger (€)</label>
+                        <input type="number" id="rechargeAmount" class="sumup-input" placeholder="Ex: 50.00" min="1" step="1">
+                    </div>
+                    <button class="sumup-btn" id="initRecharge">Suivant</button>
+                </div>
+                
+                <div class="secure-badge">
+                    🔒 Paiement 100% sécurisé via SumUp
+                </div>
+            </div>
         </div>
     </main>
     <div class="toast-container"></div>
     <script src="js/d4s1q.js"></script>
+    <script type="text/javascript" src="https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js"></script>
     <script>
-        document.getElementById('confirmRecharge').addEventListener('click', async () => {
-            const amount = parseFloat(document.getElementById('rechargeAmount').value);
+        const amountInput = document.getElementById('rechargeAmount');
+        const displayAmount = document.getElementById('displayAmount');
+        const formDiv = document.getElementById('recharge-form');
+        const cardDiv = document.getElementById('sumup-card');
+
+        amountInput.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            displayAmount.textContent = isNaN(val) ? "0.00" : val.toFixed(2);
+        });
+
+        document.getElementById('initRecharge').addEventListener('click', async () => {
+            const amount = parseFloat(amountInput.value);
             const token = localStorage.getItem('rh_session_token');
-            if(!amount || amount < 5) return alert("Minimum 5€");
+            if(!amount || amount < 1) return showToast("Le montant minimum est de 1€.", "error");
             
-            const btn = document.getElementById('confirmRecharge');
+            const btn = document.getElementById('initRecharge');
             btn.disabled = true;
-            btn.textContent = "Traitement...";
+            btn.textContent = "Création du paiement...";
 
             try {
                 const sig = cascadeEncode(Date.now().toString());
@@ -59,7 +196,7 @@
                         'content-type': 'application/json',
                         'x-auth-sig': sig,
                         'x-rh-token': token,
-                        'x-target-path': '/reseller/recharge'
+                        'x-target-path': '/reseller/create-checkout'
                     },
                     body: JSON.stringify({ amount })
                 });
@@ -67,21 +204,63 @@
                 if(res.status === 200) {
                     const hex = await res.text();
                     const data = JSON.parse(cascadeDecode(hex));
+                    
                     if(data.status === "success") {
-                        alert("Compte rechargé ! Nouveau solde: " + data.new_balance + " €");
+                        formDiv.style.display = 'none';
+                        cardDiv.style.display = 'block';
+
+                        SumUpCard.mount({
+                            checkoutId: data.checkout_id,
+                            onResponse: function (type, body) {
+                                verifyPayment(data.checkout_ref);
+                            }
+                        });
+                    }
+                } else {
+                    showToast("Erreur de connexion au service de paiement.", "error");
+                }
+            } catch(e) {
+                showToast("Une erreur est survenue lors de la communication sécurisée.", "error");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Suivant";
+            }
+        });
+
+        async function verifyPayment(checkout_ref) {
+            const token = localStorage.getItem('rh_session_token');
+            const sig = cascadeEncode(Date.now().toString());
+            
+            try {
+                const res = await fetch("https://relais-kappa.vercel.app/api/auth", {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'x-auth-sig': sig,
+                        'x-rh-token': token,
+                        'x-target-path': '/reseller/verify-recharge'
+                    },
+                    body: JSON.stringify({ checkout_ref })
+                });
+
+                if(res.status === 200) {
+                    const hex = await res.text();
+                    const data = JSON.parse(cascadeDecode(hex));
+                    
+                    if(data.status === "success") {
+                        showToast(`Paiement validé ! Nouveau solde: ${data.new_balance} €`, "success");
                         let user = JSON.parse(localStorage.getItem('rh_user_data'));
                         user.balance = data.new_balance;
                         localStorage.setItem('rh_user_data', JSON.stringify(user));
-                        window.location.href = "p9l2k.html";
+                        setTimeout(() => window.location.href = "p9l2k.html", 1500); 
+                    } else if (data.status === "pending") {
+                        showToast("Le paiement est toujours en attente.", "info");
                     }
                 }
-            } catch(e) {
-                alert("Erreur lors de la recharge");
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "Confirmer le Paiement";
+            } catch (e) {
+                showToast("Erreur réseau pendant la vérification du paiement.", "error");
             }
-        });
+        }
     </script>
 </body>
 </html>
