@@ -1,4 +1,4 @@
-const API_URL = "https://relais-kappa.vercel.app/api2/auth";
+const API_URL = "https://relais-kappa.vercel.app/api/auth";
 const REDIRECT_URL = "p9l2k.html";
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
