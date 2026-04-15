@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chez Rheyy | Recharge</title>
+    <link rel="stylesheet" href="css/v4n7z.css">
+</head>
+<body class="dashboard-body">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span>Chez Rheyy</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="p9l2k.html" class="nav-item">Vue d'ensemble</a>
+            <div class="nav-label">Gestion</div>
+            <a href="r1c2h.html" class="nav-item active">💳 Recharger</a>
+            <a href="h4t9z.html" class="nav-item">📜 Historique</a>
+            <a href="s3p8q.html" class="nav-item">📧 Support</a>
+        </nav>
+    </aside>
+    <main class="dashboard-content">
+        <header class="content-header">
+            <h2>Recharger mon Solde</h2>
+        </header>
+        <div class="card" style="max-width: 500px;">
+            <div class="form-group">
+                <label>Montant en Euros (€)</label>
+                <input type="number" id="rechargeAmount" placeholder="Ex: 50" min="5">
+            </div>
+            <div id="card-element" style="padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 20px;">
+                <p style="font-size: 13px; color: #9ca3af;">Paiement sécurisé par Carte Bancaire</p>
+                <input type="text" placeholder="#### #### #### ####" style="margin-top: 10px;">
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <input type="text" placeholder="MM/YY" style="width: 50%;">
+                    <input type="text" placeholder="CVC" style="width: 50%;">
+                </div>
+            </div>
+            <button class="btn-login" id="confirmRecharge">Confirmer le Paiement</button>
+        </div>
+    </main>
+    <div class="toast-container"></div>
+    <script src="js/d4s1q.js"></script>
+    <script>
+        document.getElementById('confirmRecharge').addEventListener('click', async () => {
+            const amount = parseFloat(document.getElementById('rechargeAmount').value);
+            const token = localStorage.getItem('rh_session_token');
+            if(!amount || amount < 5) return alert("Minimum 5€");
+            
+            const btn = document.getElementById('confirmRecharge');
+            btn.disabled = true;
+            btn.textContent = "Traitement...";
+
+            try {
+                const sig = cascadeEncode(Date.now().toString());
+                const res = await fetch("https://relais-kappa.vercel.app/api/auth", {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'x-auth-sig': sig,
+                        'x-rh-token': token,
+                        'x-target-path': '/reseller/recharge'
+                    },
+                    body: JSON.stringify({ amount })
+                });
+
+                if(res.status === 200) {
+                    const hex = await res.text();
+                    const data = JSON.parse(cascadeDecode(hex));
+                    if(data.status === "success") {
+                        alert("Compte rechargé ! Nouveau solde: " + data.new_balance + " €");
+                        let user = JSON.parse(localStorage.getItem('rh_user_data'));
+                        user.balance = data.new_balance;
+                        localStorage.setItem('rh_user_data', JSON.stringify(user));
+                        window.location.href = "p9l2k.html";
+                    }
+                }
+            } catch(e) {
+                alert("Erreur lors de la recharge");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Confirmer le Paiement";
+            }
+        });
+    </script>
+</body>
+</html>
