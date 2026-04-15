@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chez Rheyy | Dashboard</title>
+    <link rel="stylesheet" href="css/v4n7z.css">
+</head>
+<body class="dashboard-body">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon mini">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+            <span>Chez Rheyy</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">Vue d'ensemble</a>
+            <div class="nav-label">Catégories</div>
+            <a href="#" class="nav-item">E-Commerce</a>
+            <a href="#" class="nav-item">Finances</a>
+            <a href="#" class="nav-item">Sécurité</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="f0x1a.html" class="nav-item logout" id="logoutBtn">Déconnexion</a>
+        </div>
+    </aside>
+    <main class="dashboard-content">
+        <header class="content-header">
+            <div>
+                <h2 id="welcomeMsg">Gestion du Compte</h2>
+                <p class="subtitle">Bienvenue sur votre espace revendeur</p>
+            </div>
+            <div class="user-profile">
+                <div class="user-info">
+                    <span class="username" id="displayUsername">Utilisateur</span>
+                    <span class="user-role">Revendeur Certifié</span>
+                </div>
+                <div class="user-avatar" id="avatarInitial">U</div>
+            </div>
+        </header>
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon balance">€</div>
+                <div class="stat-details">
+                    <span class="stat-label">Solde Disponible</span>
+                    <span class="stat-value" id="userBalance">0,00 €</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon users">👤</div>
+                <div class="stat-details">
+                    <span class="stat-label">Clients Actifs</span>
+                    <span class="stat-value">---</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon status">🛡️</div>
+                <div class="stat-details">
+                    <span class="stat-label">Statut Compte</span>
+                    <span class="stat-value secure">Sécurisé</span>
+                </div>
+            </div>
+        </section>
+        <section class="categories-section">
+            <h3 class="section-title">Mes Services Actifs</h3>
+            <div class="category-grid" id="servicesGrid">
+            </div>
+        </section>
+    </main>
+    <script src="js/d4s1q.js"></script>
+</body>
+</html>
